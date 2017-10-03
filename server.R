@@ -7,7 +7,7 @@
 
 library(shiny)
 library(geocodeApi)
-library(leaflet)
+require(leaflet)
 
 shinyServer(function(input, output) {
   library(geocodeApi)

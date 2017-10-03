@@ -1,5 +1,5 @@
 library(shiny)
-library(leaflet)
+require(leaflet)
 
 shinyUI(fluidPage(
   
