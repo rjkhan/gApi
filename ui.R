@@ -1,24 +1,21 @@
 library(shiny)
-
+library(leaflet)
 
 shinyUI(fluidPage(
   
-  titlePanel("Hello Shiny!"),
+  titlePanel("GeoCoding Api"),
   
   sidebarLayout(
     
     sidebarPanel(
-      textInput(inputId = "caption",
-                label = "Search:",
-                value = "",
-                placeholder = "Enter a name of place kfc etc"),
+      numericInput("lat", "latitude", value=58.410, min = -180, max = 180, step = 0.001),
+      numericInput("lng", "longitude", value=15.621, min = -180, max = 180, step = 0.001),
       actionButton("goButton", "Go!")
     ),
     
     mainPanel(
-      h3(textOutput("caption", container = span)),
-      plotOutput("plot")
-      # tableOutput("view")
+      leafletOutput("mymap"),
+       tableOutput("view")
     )
   )
 ))

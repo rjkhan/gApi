@@ -7,48 +7,34 @@
 
 library(shiny)
 library(geocodeApi)
-library(plotly)
+library(leaflet)
+
 shinyServer(function(input, output) {
   library(geocodeApi)
   randomVals <- eventReactive(input$goButton, {
-    print(length(input$caption))
-    if(input$caption == "")
-      id <<- showNotification(paste("Enter something to Search"), duration = 3, closeButton = TRUE, type = "error")
-    else
-    {
-      if(!is.null(id)) removeNotification(id)
-      input$caption
-    }
+    print("go")
   })
   
-  # # Show the first "n" observations ----
-  # output$view <- renderTable({
-  #   library(geocodeApi)
-  #   library(plotly)
-  #   result <- search_place("kfc")
-  #   Animals <- result$country
-  #   rate <- result$rating
-  #   country <- result$country
-  #   data <- data.frame(Animals, rate, country)
-  #   
-  #   plot_ly(data, x = ~country, y = ~result$rating, type = 'bar', name = 'rate' ) %>%
-  #     
-  #     layout(yaxis = list(title = 'rating' , dtick = 0.5), barmode = 'stack')
-  # })
   
-  output$plot <- renderPlot({
-    # print(randomVals())
-      library(geocodeApi)
-      library(plotly)
-      result <- search_place(randomVals())
-      Animals <- result$country
-      rate <- result$rating
-      country <- result$country
-      data <- data.frame(Animals, rate, country)
+  
+  output$mymap <- renderLeaflet({
 
-      plot_ly(data, x = ~country, y = ~result$rating, type = 'bar', name = 'rate' ) %>%
-      layout(yaxis = list(title = 'rating' , dtick = 0.5), barmode = 'stack')
-    # hist(randomVals())
+      result <<- search_by_latlng(input$lat,input$lng)
+      if(length(result) != 5)
+      {
+        return ()
+      }
+      Sys.sleep(2)
+
+      m <- leaflet(options = leafletOptions(minZoom = -1, maxZoom = 18))
+      m <- addTiles(m)
+      m <- addMarkers(m,lng = result$lng, lat = result$lat , popup = result$address)
+      m
+  })
+  
+  output$view <- renderTable({
+    result
+    # DT::datatable(iris, options = list(lengthMenu = c(5, 30, 50), pageLength = 5))
   })
   
 })
