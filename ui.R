@@ -1,5 +1,6 @@
 
 library(shiny)
+require(leaflet)
 shinyUI(fluidPage(
   
   titlePanel("GeoCoding Api"),
